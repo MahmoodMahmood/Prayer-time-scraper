@@ -4,12 +4,19 @@ import pytz
 import requests
 from bs4 import BeautifulSoup
 
+# TODO: move into class definition
+fmt = '%Y-%m-%d %I:%M:%S %p %z'
+
 class DubaiIacadPrayerTimes:
     def __init__(self):
         self.URL = "https://services.iacad.gov.ae/SmartPortal/Timings"
         self.TIMEZONE_TZ = pytz.timezone('Asia/Dubai')
         self.headers = requests.structures.CaseInsensitiveDict()
         self.headers["Cookie"] = "_culture=en-GB"
+
+    def get_nearest_prayer_str(self):
+        nearest_prayer = self.get_nearest_prayer()
+        return f"{nearest_prayer[0]}: {nearest_prayer[1].strftime(fmt)}"
 
     def get_nearest_prayer(self):
         prayers_today = self.get_athan_times_today()
@@ -41,8 +48,5 @@ class DubaiIacadPrayerTimes:
 if __name__ == "__main__":
     times_getter = DubaiIacadPrayerTimes()
     prayer_times = times_getter.get_athan_times_today()
-    fmt = '%Y-%m-%d %I:%M:%S %p %z'
     print([f"{prayer_name}: {prayer_times[prayer_name].strftime(fmt)}" for prayer_name in prayer_times])
-
-    nearest_prayer = times_getter.get_nearest_prayer()
-    print(f"nearest prayer is: {nearest_prayer[0]}: {nearest_prayer[1].strftime(fmt)}")
+    print(f"nearest prayer is: {times_getter.get_nearest_prayer_str()}")
