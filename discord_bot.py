@@ -24,6 +24,7 @@ async def on_ready():
     for channel in get_general_channels(client.guilds[0]):
         await channel.send(f"nearest prayer in Dubai is {scraper.prayer_tuple_to_str(scraper.get_next_prayer())} " \
             f"which is in {int((scraper.get_nearest_prayer()[1] - datetime.now(utc)).seconds/60)} minutes")
+    exit()
 
 if __name__ == "__main__":
     client.run(TOKEN)
